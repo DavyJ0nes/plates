@@ -1,0 +1,41 @@
+all: run
+
+# Example Makefile for building and deploying Go applications with Docker
+
+# To build and run the docker container locally, run:
+# $ make
+
+# or to publish the :latest version to the specified registry as :1.0.0, run:
+# $ make publish version=1.0.0
+
+#### VARIABLES ####
+user_name ?= user_name
+app_name ?= app_name
+
+py_version ?= 3.6.2
+app_version ?= 0.0.2
+
+git_hash = $(shell git rev-parse HEAD | cut -c 1-6)
+build_date = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
+
+.PHONY: build run test
+
+#### COMMANDS ####
+build:
+	$(call blue, "# Building Python App...")
+	@docker build --label APP_VERSION=${app_version} --label BUILT_ON=${build_date} --label GIT_HASH=${git_hash} -t ${user_name}/${image_name} .
+
+run:
+	$(call blue, "# Running Python App...")
+	@docker run --rm --name ${image_name} -v "$(CURDIR)":/src/app/ -w /src/app ${user_name}/${image_name} python ${app_name}.py
+
+test:
+	$(call blue, "# Testing Python App...")
+	@docker run --rm --name ${image_name} -v "$(CURDIR)":/src/app/ -w /src/app ${user_name}/${image_name} python ${app_name}_test.py
+
+#### FUNCTIONS ####
+define blue
+	@tput setaf 4
+	@echo $1
+	@tput sgr0
+endef

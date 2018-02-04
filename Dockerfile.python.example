@@ -1,0 +1,24 @@
+FROM alpine:3.6
+LABEL Name=app_name Version=0.0.1
+LABEL Author=davyj0nes
+
+RUN apk update && \
+  apk add build-base libffi-dev openssl-dev && \
+  apk add python3-dev && \
+  ln -s /usr/bin/python3 /usr/bin/python && \
+  ln -s /usr/bin/pip3 /usr/bin/pip && \
+  mkdir -p /src/app
+
+RUN adduser -D -u 10001 dockmaster
+
+WORKDIR /src/app
+
+ADD ./requirements.txt /src/app/requirements.txt
+
+RUN pip install -r requirements.txt
+
+ADD . /src/app
+
+USER dockmaster
+
+CMD ["python"]
