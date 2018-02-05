@@ -1,0 +1,39 @@
+version: '3'
+services:
+
+  go_app:
+    image: example/goapp
+    environment:
+      - REDIS_HOST=redis:6379
+    ports:
+      - "3000:3000"
+
+  redis:
+    image: "redis:alpine"
+    command: "redis-server --appendonly yes"
+    volumes:
+      - redis_store:/data
+
+  prometheus:
+    image: "quay.io/prometheus/prometheus"
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus/etc/:/etc/prometheus/"
+
+  grafana:
+    image: "grafana/grafana"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=hunter2
+    ports:
+      - "3001:3000"
+    volumes:
+      - "./grafana/lib:/var/lib/grafana"
+
+  redis_metrics:
+    image: oliver006/redis_exporter
+    environment:
+      - REDIS_ADDR=redis:6379
+
+volumes:
+  redis_store:

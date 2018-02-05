@@ -31,18 +31,20 @@ Created Dockerfile
 
 ## TODO
 
-- [ ] Add Node Makefile and Dockerfile
-- [ ] Add Packer.json template
-- [ ] Add Jenkinsfile template
-- [ ] Add go test file template
-- [ ] Add python test file template
-- [ ] Add post mortem doc template
-- [ ] Add Kubernetes service, deployment, etc templates
-- [ ] Add docker-compose template
-- [ ] Add bash script template
-- [ ] Add go main function template
+- [x] Add Packer.json template
+- [x] Add Jenkinsfile template
+- [x] Add go main function template
+- [x] Add go test file template
+- [x] Add bash script template
+- [x] Add python script template
+- [x] Add python script test template
 - [ ] Add Python boto script template
-- [ ] Add Prometheus config file template
+- [ ] Add Python boto script test template
+- [ ] Add Kubernetes service, deployment, etc templates
+- [x] Add docker-compose template
+- [x] Add Prometheus config file template
+- [ ] Add Node Makefile and Dockerfile
+- [x] Add post mortem doc template
 - [ ] Test Suite for get-template tool
 
 ## License

@@ -1,0 +1,46 @@
+{
+  "variables": {
+    "ssh_user": "user",
+    "name_prefix": "example",
+    "user_name": "davyj0nes"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "eu-west-1",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "*ubuntu-xenial-16.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "most_recent": true
+      },
+      "instance_type": "t2.micro",
+      "ssh_username": "{{ user `ssh_user` }}",
+      "ami_name": "{{ user `name_prefix` }}-{{ timestamp }}",
+      "tags": {
+        "Owner": "{{ user `user_name` }}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+      "inline": [
+        "sleep 15",
+        "apt-add-repository ppa:ansible/ansible",
+        "/usr/bin/apt-get update",
+        "/usr/bin/apt-get -y install ansible"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "playbooks/site.yml",
+      "role_paths": [
+        "playbooks/roles/web/"
+      ]
+    }
+  ]
+}
