@@ -1,0 +1,25 @@
+pipeline {
+  agent {
+    docker {
+      image 'hashicorp/packer:light'
+    }
+  }
+
+  stages {
+    stage('Validate Packer config files') {
+      steps {
+        sh "cd packer && packer validate base.json"
+      }
+    }
+    stage('Build Base Image') {
+      steps {
+        sh "cd packer && packer build packer.json"
+      }
+    }
+  }
+  post {
+    always {
+      deleteDir()
+    }
+  }
+}
