@@ -18,7 +18,7 @@ var (
 func init() {
 	templateDir = os.Getenv("TEMPLATE_DIR")
 	if templateDir == "" {
-		fmt.Println("TEMPLATE_DIR envar is not configured\nPlease set to the directory of the temlates")
+		fmt.Println("TEMPLATE_DIR envar is not configured\nPlease set to the directory of the templates")
 		os.Exit(1)
 	}
 
