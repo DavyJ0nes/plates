@@ -11,10 +11,11 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "get-template",
+	Use:   "file-templates",
 	Short: "Tool to interact with file templates.",
-	Long: `get-template is a CLI tool that helps to speed up development.
-	It does this by giving you a selction of templates to choose from.`,
+	Long: `file-templates is a CLI tool that helps to speed up development.
+	It does this by giving you a selction of templates to choose from and
+	allows you to copy them into your local directory.`,
 }
 
 var tmpl *template.Template

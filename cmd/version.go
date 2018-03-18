@@ -29,5 +29,5 @@ var versionCmd = &cobra.Command{
 }
 
 func printVersion() {
-	fmt.Printf("version: %s (%s, %s)\n", Release, Commit, BuildTime)
+	fmt.Printf("Version:\t%s\nGit Hash:\t%s\nBuild Time:\t%s\n", Release, Commit, BuildTime)
 }
