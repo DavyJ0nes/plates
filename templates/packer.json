@@ -17,17 +17,17 @@
         "most_recent": true
       },
       "instance_type": "t2.micro",
-      "ssh_username": "{{ user `ssh_user` }}",
-      "ami_name": "{{ user `name_prefix` }}-{{ timestamp }}",
+      "ssh_username": "",
+      "ami_name": "",
       "tags": {
-        "Owner": "{{ user `user_name` }}"
+        "Owner": ""
       }
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+      "execute_command": "echo 'packer' | sudo -S sh -c ''",
       "inline": [
         "sleep 15",
         "apt-add-repository ppa:ansible/ansible",

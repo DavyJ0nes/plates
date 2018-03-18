@@ -1,4 +1,4 @@
-# Templates
+# File templates
 
 ## Description
 
