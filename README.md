@@ -6,7 +6,7 @@ A selection of template files for new projects, including Dockerfiles, Makefiles
 
 ## Usage
 
-There is a helper tool `get-template` that accompanies this repo to aid in the moving of templates
+There is a helper tool `file-templates` that accompanies this repo to aid in the moving of templates
 
 ### Building the tool
 
@@ -17,16 +17,15 @@ $ make install
 
 ```shell
 # List out templates
-$ get-template -list
-Dockerfile.go.example
-Dockerfile.python.example
-Makefile.go.example
-Makefile.python.example
-README.example
+$ file-templates list
+1.      Dockerfile-python
+2.      post-mortem.md
+3.      Dockerfile-go
+4.      bash_script.sh
+5.      docker-compose.yml
 
 # Copy Template to Current Directory
-$ get-template -file Dockerfile.go.example
-Created Dockerfile
+$ file-templates copy Dockerfile-go Dockerfile
 ```
 
 ## TODO

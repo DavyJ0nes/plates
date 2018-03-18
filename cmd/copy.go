@@ -66,7 +66,6 @@ func findTemplate(name string) (*template.Template, error) {
 }
 
 func copyTemplate(src *template.Template, dest string) error {
-	fmt.Printf("Copying %s to %s\n", src.Name(), dest)
 	destFile, err := os.Create(dest)
 	if err != nil {
 		return errors.Wrap(err, "Error Creating Destination File")

@@ -1,41 +1,44 @@
 all: build
 
-# Makefile for get-template tool
+# Makefile for file-templates tool
 
 # To build the binary for your OS run:
 # $ make
 
 #### VARIABLES ####
-app_name = get-template
-binary_version = 0.0.1
-go_os = $(shell uname | tr '[:upper:]' '[:lower:]')
-user_bin_dir = $(HOME)/bin
+APP_NAME = file-templates
+PROJECT ?= github.com/davyj0nes/file-templates
 
-go_version ?= 1.9.2
+RELEASE = 0.1.0
+COMMIT = $(shell git rev-parse HEAD | cut -c 1-6)
+BUILD_TIME = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
-git_hash = $(shell git rev-parse HEAD | cut -c 1-6)
-build_date = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
+GO_OS = $(shell uname | tr '[:upper:]' '[:lower:]')
+USER_BIN_DIR = $(HOME)/bin
+
+LDFLAGS = -ldflags "-s -w -X ${PROJECT}/cmd.Release=${RELEASE} -X ${PROJECT}/cmd.Commit=${COMMIT} -X ${PROJECT}/cmd.BuildTime=${BUILD_TIME}"
+
+GO_VERSION ?= 1.10
 
 .PHONY: run build install test clean
 
 #### COMMANDS ####
 run:
 	$(call blue, "# Running App...")
-	@docker run -it --rm -v "$(GOPATH)":/go -v "$(CURDIR)":/go/src/app -p ${local_port}:${app_port} -w /go/src/app golang:${go_version} go run main.go
+	@docker run -it --rm -v "$(GOPATH)":/go -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${GO_VERSION} go run main.go
 
 build:
 	$(call blue, "# Building Golang Binary...")
-	@docker run --rm -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${go_version} sh -c 'go get && GOOS=${go_os} go build -o ${app_name}'
+	@docker run --rm -v "$(GOPATH)":/go -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${GO_VERSION} sh -c 'go get && GOOS=${GO_OS} go build ${LDFLAGS} -o ${APP_NAME}'
 
 install: build
 	$(call blue, "# Installing Binary...")
-	# @docker build --label APP_VERSION=${binary_version} --label BUILT_ON=${build_date} --label GIT_HASH=${git_hash} -t ${username}/${app_name}:${image_version} .
-	@cp ${app_name} ${user_bin_dir}/${app_name}
+	@cp ${APP_NAME} ${USER_BIN_DIR}/${APP_NAME}
 	@$(MAKE) clean
 
 test:
 	$(call blue, "# Testing Golang Code...")
-	@docker run --rm -it -v "$(GOPATH):/go" -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${go_version} sh -c 'go test -v' 
+	@docker run --rm -it -v "$(GOPATH):/go" -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${GO_VERSION} sh -c 'go test -v' 
 
 clean: 
 	@rm -f ${app_name} 
