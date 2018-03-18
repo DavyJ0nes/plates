@@ -1,37 +1,45 @@
 all: run
 
-# Example Makefile for building and deploying Go applications with Docker
+# Example Makefile for building and deploying a Python application with Docker
 
 # To build and run the docker container locally, run:
 # $ make
 
 # or to publish the :latest version to the specified registry as :1.0.0, run:
-# $ make publish version=1.0.0
+# $ make publish RELEASE=1.0.0
 
 #### VARIABLES ####
-user_name ?= user_name
-app_name ?= app_name
+USER_NAME ?= user_name
+APP_NAME ?= app_name
+IMAGE_NAME := ${APP_NAME}
 
-py_version ?= 3.6.2
-app_version ?= 0.0.2
+PY_VERSION ?= 3.6.2
+RELEASE ?= 0.0.2
+IMAGE_VERSION ?= latest
 
-git_hash = $(shell git rev-parse HEAD | cut -c 1-6)
-build_date = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
-
-.PHONY: build run test
+GIT_HASH = $(shell git rev-parse HEAD | cut -c 1-6)
+BUILD_DATE = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
 #### COMMANDS ####
+.PHONY: build
 build:
 	$(call blue, "# Building Python App...")
-	@docker build --label APP_VERSION=${app_version} --label BUILT_ON=${build_date} --label GIT_HASH=${git_hash} -t ${user_name}/${image_name} .
+	@docker build --label APP_VERSION=${RELEASE} --label BUILT_ON=${BUILD_DATE} --label GIT_HASH=${GIT_HASH} -t ${USER_NAME}/${IMAGE_NAME} .
 
+.PHONY: publish
+publish: build
+        $(call blue, "# Publishing Docker Image...")
+        @docker push docker.io/${USERNAME}/${APP}:${RELEASE}
+
+.PHONY: run
 run:
 	$(call blue, "# Running Python App...")
-	@docker run --rm --name ${image_name} -v "$(CURDIR)":/src/app/ -w /src/app ${user_name}/${image_name} python ${app_name}.py
+	@docker run --rm --name ${IMAGE_NAME} -v "$(CURDIR)":/src/app/ -w /src/app ${USER_NAME}/${IMAGE_NAME}:${RELEASE} python ${APP_NAME}.py
 
+.PHONY: test
 test:
 	$(call blue, "# Testing Python App...")
-	@docker run --rm --name ${image_name} -v "$(CURDIR)":/src/app/ -w /src/app ${user_name}/${image_name} python ${app_name}_test.py
+	@docker run --rm --name ${IMAGE_NAME} -v "$(CURDIR)":/src/app/ -w /src/app ${USER_NAME}/${IMAGE_NAME} python ${APP_NAME}_test.py
 
 #### FUNCTIONS ####
 define blue
