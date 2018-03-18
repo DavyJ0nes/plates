@@ -1,13 +1,13 @@
 {
-    "remotePath": "/home/vagrant/CODE/repos/UK_CLOUD/support-utils/",
-    "host": "192.168.2.113",
-    "username": "vagrant",
+    "remotePath": "remoteDir",
+    "host": "0.0.0.0",
+    "username": "shh_user",
     "port": 22,
     "protocol": "sftp",
     "uploadOnSave": false,
     "passive": false,
     "debug": false,
-    "privateKeyPath": "/Users/Davy/.ssh/id_rsa",
+    "privateKeyPath": "path/to/private/key",
     "passphrase": null,
     "ignore": [
         "\\.vscode",
