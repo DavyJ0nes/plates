@@ -16,6 +16,5 @@ print_usage() {
 # VARIABLES
 arg=$1
  
- 
 # PRINT OUTPUT
 echo "arg = $arg"
