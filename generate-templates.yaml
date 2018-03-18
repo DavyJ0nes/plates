@@ -1,0 +1,14 @@
+# default: main
+pkg: static
+
+# destination
+dest: "./static/"
+
+output: "static-templates.go"
+
+# type: array of objects
+custom:
+
+  - files: 
+    # take everything inside of templates
+    - "./templates/"

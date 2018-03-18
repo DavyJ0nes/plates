@@ -37,7 +37,9 @@ func init() {
 func copyCommand(args []string) error {
 	src := args[0]
 	dest := args[1]
-	srcTmpl, err := findTemplate(src)
+
+	srcName := fmt.Sprintf("templates/%s", src)
+	srcTmpl, err := findTemplate(srcName)
 	if err != nil {
 		return errors.Wrap(err, "Error Finding Template")
 	}
@@ -55,7 +57,7 @@ func copyCommand(args []string) error {
 
 func findTemplate(name string) (*template.Template, error) {
 	var template *template.Template
-	for _, plate := range tmpl.Templates() {
+	for _, plate := range tmpls {
 		if plate.Name() == name {
 			template = plate
 			return template, nil

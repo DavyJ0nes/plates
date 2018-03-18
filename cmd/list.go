@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -24,8 +25,9 @@ func init() {
 }
 
 func listTemplates() error {
-	for id, plate := range tmpl.Templates() {
-		fmt.Printf("%d.\t%s\n", id+1, plate.Name())
+	for id, plate := range tmpls {
+		friendlyName := strings.Split(plate.Name(), "templates/")[1]
+		fmt.Printf("%d.\t%s\n", id+1, friendlyName)
 	}
 	return nil
 }

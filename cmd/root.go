@@ -3,8 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"text/template"
+
+	"github.com/davyj0nes/file-templates/static"
 
 	"github.com/spf13/cobra"
 )
@@ -18,17 +19,23 @@ var rootCmd = &cobra.Command{
 	allows you to copy them into your local directory.`,
 }
 
-var tmpl *template.Template
+var tmpls []*template.Template
 
 func init() {
-	dir, exists := os.LookupEnv("TEMPLATE_DIRECTORY")
-	if !exists {
-		fmt.Println("TEMPLATE_DIRECTORY not set")
+	fileSlice, err := static.WalkDirs("", false)
+	if err != nil {
+		fmt.Println("Issue Walking Directories")
 		os.Exit(1)
 	}
 
-	pattern := filepath.Join(dir, "*")
-	tmpl = template.Must(template.ParseGlob(pattern))
+	for _, file := range fileSlice {
+		fileText, err := static.ReadFile(file)
+		if err != nil {
+			fmt.Println("Problem Reading File")
+			os.Exit(1)
+		}
+		tmpls = append(tmpls, template.Must(template.New(file).Parse(string(fileText))))
+	}
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

@@ -8,16 +8,11 @@ A selection of template files that can easily be copied into projects, including
 
 The motivation behind this was to help speed up my workflow and encourage reuse.
 
+All templates are compiled into the binary. This is done using [fileb0x](https://github.com/UnnoTed/fileb0x)
+
 If you have any suggestions for improving the templates or want to have some added then please open an [Issue](https://github.com/DavyJ0nes/templates/issues/new) or [Pull Request](https://github.com/DavyJ0nes/templates/compare)
 
 ## Usage
-
-### Setup Environment Variables
-
-Before using the tool you will need to get the Environment Variable `TEMPLATE_DIRECTORY` to the location of your templates.
-
-If you are using the default durectory that is within this repo then you can easily set this by running `export TEMPLATE_DIRECTORY=$PWD/templates` on a unix based system.
-On Windows you can run `setx TEMPLATE_DIRECTORY "%cd%\templates"`
 
 ### Building the tool
 

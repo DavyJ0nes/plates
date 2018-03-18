@@ -9,7 +9,7 @@ all: build
 APP_NAME = file-templates
 GO_PROJECT_PATH ?= github.com/davyj0nes/file-templates
 
-RELEASE = 0.1.0
+RELEASE = 0.2.0
 COMMIT = $(shell git rev-parse HEAD | cut -c 1-6)
 BUILD_TIME = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
@@ -32,8 +32,13 @@ run:
 	$(call blue, "# Running App...")
 	@docker run -it --rm -v "$(GOPATH)":/go -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${GO_VERSION} go run main.go
 
+.PHONY: generate
+generate:
+	$(call blue, "# Generating Static Templates...")
+	@docker run --rm -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${GO_VERSION} go get -u github.com/UnnoTed/fileb0x && go generate
+
 .PHONY: release
-release:
+release: generate
 	$(call blue, "# Creating New Release: ${RELEASE} ...")
 	@mkdir -p releases/${RELEASE}
 	$(call blue, "  # Compiling Linux Golang App...")
@@ -44,7 +49,7 @@ release:
 	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_WIN} -o releases/${RELEASE}/${APP_NAME}.exe'
 
 .PHONY: build
-build:
+build: generate
 	$(call blue, "# Building Golang Binary...")
 	@docker run --rm -v "$(GOPATH)":/go -v "$(CURDIR)":/go/src/app -w /go/src/app golang:${GO_VERSION} sh -c 'go get && GOOS=${GO_OS} go build ${LDFLAGS} -o ${APP_NAME}'
 
