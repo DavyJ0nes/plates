@@ -1,12 +1,12 @@
 #### VARIABLES ####
 USERNAME = davyj0nes
-APP_NAME = task
+APP_NAME = app_name
 
-GO_VERSION ?= 1.10
-GO_PROJECT_PATH ?= github.com/davyj0nes/task-cli
+GO_VERSION ?= 1.10.3
+GO_PROJECT_PATH ?= github.com/davyj0nes/app_name
 GO_FILES = $(shell go list ./... | grep -v /vendor/)
 
-RELEASE = 0.0.2
+RELEASE = 0.0.1
 COMMIT = $(shell git rev-parse HEAD | cut -c 1-6)
 BUILD_TIME = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
@@ -40,23 +40,23 @@ binary:
 image: binary
 	$(call blue, "# Building Docker Image...")
 	@docker build --no-cache --label APP_VERSION=${RELEASE} --label BUILT_ON=${BUILD_TIME} --label GIT_HASH=${COMMIT} -t ${USERNAME}/${APP_NAME}:${RELEASE} .
-	@docker tag ${USERNAME}/${APP}:${RELEASE} ${USERNAME}/${APP}:latest
+	@docker tag ${USERNAME}/${APP_NAME}:${RELEASE} ${USERNAME}/${APP_NAME}:latest
 	@$(MAKE) clean
 
 .PHONY: publish
 publish: image
         $(call blue, "# Publishing Docker Image...")
-        @docker push docker.io/${USERNAME}/${APP}:${RELEASE}
+        @docker push docker.io/${USERNAME}/${APP_NAME}:${RELEASE}
 
 .PHONY: run
 run:
 	$(call blue, "# Running App...")
-	@docker run -it --rm -v "$(GOPATH)":/go -v "$(CURDIR)":/go/src/app -p ${local_port}:${app_port} -w /go/src/app golang:${go_version} go run main.go
+	@docker run -it --rm -v "$(GOPATH)":/go -v "$(CURDIR)":/go/src/app -p ${local_port}:${APP_PORT} -w /go/src/app golang:${GO_VERSION} go run main.go
 
 .PHONY: run_image
 run_image: image
 	$(call blue, "# Running Docker Image Locally...")
-	@docker run -it --rm --name ${APP_NAME} -p ${local_port}:3000 ${USERNAME}/${APP_NAME}:${IMAGE_VERSION} 
+	@docker run -it --rm --name ${APP_NAME} -p ${LOCAL_PORT}:3000 ${USERNAME}/${APP_NAME}:${IMAGE_VERSION} 
 
 .PHONY: test
 test:
