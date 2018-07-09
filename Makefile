@@ -6,7 +6,7 @@ all: build
 # $ make
 
 #### VARIABLES ####
-APP_NAME = file-templates
+APP_NAME = plates
 GO_PROJECT_PATH ?= github.com/davyj0nes/file-templates
 
 RELEASE = 0.2.0
@@ -24,7 +24,7 @@ GO_BUILD_LINUX = $(BUILD_PREFIX) go build $(BUILD_FLAGS) $(LDFLAGS)
 GO_BUILD_OSX = GOOS=darwin GOARCh=amd64 go build $(LDFLAGS)
 GO_BUILD_WIN = GOOS=windows GOARCh=amd64 go build $(LDFLAGS)
 
-GO_VERSION ?= 1.10
+GO_VERSION ?= 1.10.3
 
 #### COMMANDS ####
 .PHONY: run

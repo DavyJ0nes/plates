@@ -6,6 +6,9 @@ GO_VERSION ?= 1.10.3
 GO_PROJECT_PATH ?= github.com/davyj0nes/app_name
 GO_FILES = $(shell go list ./... | grep -v /vendor/)
 
+APP_PORT = 8080
+LOCAL_PORT = 8080
+
 RELEASE = 0.0.1
 COMMIT = $(shell git rev-parse HEAD | cut -c 1-6)
 BUILD_TIME = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
@@ -34,7 +37,7 @@ compile:
 .PHONY: binary
 binary:
 	$(call blue, "# Building Golang Binary...")
-	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_STATIC} -o ${APP_NAME}_static'
+	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_STATIC} -o ${APP_NAME}'
 
 .PHONY: image
 image: binary
@@ -45,8 +48,8 @@ image: binary
 
 .PHONY: publish
 publish: image
-        $(call blue, "# Publishing Docker Image...")
-        @docker push docker.io/${USERNAME}/${APP_NAME}:${RELEASE}
+	$(call blue, "# Publishing Docker Image...")
+	@docker push docker.io/${USERNAME}/${APP_NAME}:${RELEASE}
 
 .PHONY: run
 run:
@@ -56,7 +59,7 @@ run:
 .PHONY: run_image
 run_image: image
 	$(call blue, "# Running Docker Image Locally...")
-	@docker run -it --rm --name ${APP_NAME} -p ${LOCAL_PORT}:3000 ${USERNAME}/${APP_NAME}:${IMAGE_VERSION} 
+	@docker run -it --rm --name ${APP_NAME} -p ${LOCAL_PORT}:${APP_PORT} ${USERNAME}/${APP_NAME}:${IMAGE_VERSION} 
 
 .PHONY: test
 test:
@@ -65,7 +68,7 @@ test:
 
 .PHONY: clean
 clean: 
-	@rm -f ${app_name} 
+	@rm -f ${APP_NAME} 
 
 #### FUNCTIONS ####
 define blue
