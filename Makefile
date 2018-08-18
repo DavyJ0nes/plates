@@ -10,7 +10,7 @@ all: help
 APP_NAME = plates
 GO_PROJECT_PATH ?= github.com/davyj0nes/plates
 
-RELEASE = 0.2.0
+RELEASE = 0.3.0
 COMMIT = $(shell git rev-parse HEAD | cut -c 1-6)
 BUILD_TIME = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
