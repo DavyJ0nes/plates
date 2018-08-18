@@ -5,16 +5,16 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/davyj0nes/file-templates/static"
+	"github.com/davyj0nes/plates/static"
 
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "file-templates",
+	Use:   "plates",
 	Short: "Tool to interact with file templates.",
-	Long: `file-templates is a CLI tool that helps to speed up development.
+	Long: `plates is a CLI tool that helps to speed up development.
 	It does this by giving you a selction of templates to choose from and
 	allows you to copy them into your local directory.`,
 }

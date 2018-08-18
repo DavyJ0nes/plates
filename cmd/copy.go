@@ -16,7 +16,7 @@ var copyCmd = &cobra.Command{
 	Use:   "copy",
 	Short: "Copies a template to the current directory",
 	Long: `Example
-	get-template copy <src_template> <dest_name>`,
+	plates copy <src_template> <dest_name>`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if args[0] == "help" {
 			cmd.Help()

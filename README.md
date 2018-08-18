@@ -1,4 +1,4 @@
-# File templates
+# Plates
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/DavyJ0nes/templates)](https://goreportcard.com/report/github.com/DavyJ0nes/templates)
 
@@ -25,19 +25,20 @@ $ make install
 
 ```shell
 # List out templates
-$ file-templates list
+$ plates list
 1.      Dockerfile-python
 2.      post-mortem.md
 3.      Dockerfile-go
 4.      bash_script.sh
 5.      docker-compose.yml
+...
 
 # Copy Template to Current Directory
-$ file-templates copy Dockerfile-go Dockerfile
+$ plates copy Dockerfile-go Dockerfile
 
 # get version information
-$ file-templates version
-Version:        0.1.0
+$ plates version
+Version:        0.2.0
 Git Hash:       515f3d
 Build Time:     2018-03-18_11:42:58AM
 ```
