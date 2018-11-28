@@ -10,7 +10,7 @@ all: help
 APP_NAME = plates
 GO_PROJECT_PATH ?= github.com/davyj0nes/plates
 
-RELEASE = 0.3.0
+RELEASE = 0.4.0
 COMMIT = $(shell git rev-parse HEAD | cut -c 1-6)
 BUILD_TIME = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
@@ -25,7 +25,7 @@ GO_BUILD_LINUX = $(BUILD_PREFIX) go build $(BUILD_FLAGS) $(LDFLAGS)
 GO_BUILD_OSX = GOOS=darwin GOARCh=amd64 go build $(LDFLAGS)
 GO_BUILD_WIN = GOOS=windows GOARCh=amd64 go build $(LDFLAGS)
 
-GO_VERSION ?= 1.10.3
+GO_VERSION ?= 1.11.2
 
 # COMMANDS
 
