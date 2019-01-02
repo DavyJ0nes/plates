@@ -97,7 +97,7 @@ build_win:
 tag_push_release:
 	$(call blue, "  # Tagging Release ...")
 	git tag "v${RELEASE}"
-	git push origin master
+	git push origin master --tags
 	hub release create \
 	-a releases/${RELEASE}/${APP_NAME}-linux-amd64 \
 	-a releases/${RELEASE}/${APP_NAME}-darwin-amd64 \
