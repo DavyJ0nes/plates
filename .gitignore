@@ -1,4 +1,6 @@
 *.DS_Store*
+.idea/
+.vs-code/
 *_static
 static*
 file_templates

@@ -1,21 +1,14 @@
-# HEADING
+# New Awesome Project
+
+| Project Info | |
+|---------|-------------------------------------------|
+| Author  | [davyj0nes](https://github.com/davyj0nes) |
+| Website | [Link](https://github.com/davyj0nes)      |
+
 
 ## Description
 
-Some blurb about the program
-
-## Usage
-
-Usage instructions with code examples
-
-```shell
-# Here is the code example
-go run something
-```
-
-## TODO
-
-- [ ] Update README
+Some interesting information about the application
 
 ## License
 

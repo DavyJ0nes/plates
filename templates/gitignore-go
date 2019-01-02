@@ -5,6 +5,13 @@
 *.so
 *.dylib
 
+# vendor
+/vendor
+
+# IDEs
+.idea/
+.vs-code/
+
 # Test binary, build with `go test -c`
 *.test
 
