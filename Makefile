@@ -1,4 +1,6 @@
 .DEFAULT_TARGET=help
+
+.PHONY: all
 all: help
 
 # Makefile for plates tool
@@ -10,7 +12,7 @@ all: help
 APP_NAME = plates
 GO_PROJECT_PATH ?= github.com/davyj0nes/plates
 
-RELEASE = 0.4.0
+RELEASE = 0.5.0
 COMMIT = $(shell git rev-parse HEAD | cut -c 1-6)
 BUILD_TIME = $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
@@ -62,14 +64,32 @@ install: build
 
 ## release: build binary for linux, windows and OSX
 .PHONY: release
-release: generate
+release: generate make_release_dir build_linux build_osx build_win
+	$(call blue, "# Installing Release: ${RELEASE} ...")
+	@cp -f releases/${RELEASE}/${APP_NAME}_osx $(HOME)/bin/${APP_NAME}
+
+## make_release_dir: make dir for release
+.PHONY: make_release_dir
+make_release_dir:
 	$(call blue, "# Creating New Release: ${RELEASE} ...")
 	@mkdir -p releases/${RELEASE}
-	$(call blue, "  # Compiling Linux Golang App...")
+
+## build_linux: build binary for linux
+.PHONY: build_linux
+build_linux:
+	$(call blue, "  # Compiling Linux Golang App ...")
 	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_LINUX} -o releases/${RELEASE}/${APP_NAME}_linux'
-	$(call blue, "  # Compiling OSX Golang App...")
+
+## build_osx: build binary for OSX
+.PHONY: build_osx
+build_osx:
+	$(call blue, "  # Compiling OSX Golang App ...")
 	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_OSX} -o releases/${RELEASE}/${APP_NAME}_osx'
-	$(call blue, "  # Compiling Windows Golang App...")
+
+## build_win: build binary for Windows
+.PHONY: build_win
+build_win:
+	$(call blue, "  # Compiling Windows Golang App ...")
 	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_WIN} -o releases/${RELEASE}/${APP_NAME}.exe'
 
 ## test: run test suitde for application

@@ -16,10 +16,6 @@ var initCmd = &cobra.Command{
 	Long: `Example
 	plates init`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if args[0] == "help" {
-			cmd.Help()
-			os.Exit(1)
-		}
 		if err := initCommand(); err != nil {
 			fmt.Printf("Error initialing:\n %v\n", err)
 			os.Exit(1)
@@ -40,7 +36,9 @@ func initCommand() error {
 		if os.IsExist(err) {
 			return errors.New("directory already initialised")
 		}
-		return err
+		if !os.IsNotExist(err) {
+			return err
+		}
 	}
 
 	// mkdir cmd/
