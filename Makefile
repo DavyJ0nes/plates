@@ -97,11 +97,12 @@ build_win:
 tag_push_release:
 	$(call blue, "  # Tagging Release ...")
 	git tag "v${RELEASE}"
+	git push origin master
 	hub release create \
 	-a releases/${RELEASE}/${APP_NAME}-linux-amd64 \
 	-a releases/${RELEASE}/${APP_NAME}-darwin-amd64 \
 	-a releases/${RELEASE}/${APP_NAME}-windows-amd64.exe \
-	-m "v${RELEASE} v${RELEASE}
+	-m "v${RELEASE}" v${RELEASE}
 
 
 ## test: run test suitde for application
