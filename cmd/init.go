@@ -43,7 +43,7 @@ func initCommand() error {
 
 	// mkdir cmd/
 	cmdPath := filepath.Join(currDir, "cmd")
-	err = os.Mkdir(cmdPath, os.ModeDir)
+	err = os.Mkdir(cmdPath, os.ModePerm)
 	if err != nil {
 		return err
 	}

@@ -64,9 +64,9 @@ install: build
 
 ## release: build binary for linux, windows and OSX
 .PHONY: release
-release: generate make_release_dir build_linux build_osx build_win
+release: generate make_release_dir build_linux build_osx build_win tag_push_release
 	$(call blue, "# Installing Release: ${RELEASE} ...")
-	@cp -f releases/${RELEASE}/${APP_NAME}_osx $(HOME)/bin/${APP_NAME}
+	@cp -f releases/${RELEASE}/${APP_NAME}-darwin-amd64 $(HOME)/bin/${APP_NAME}
 
 ## make_release_dir: make dir for release
 .PHONY: make_release_dir
@@ -78,19 +78,31 @@ make_release_dir:
 .PHONY: build_linux
 build_linux:
 	$(call blue, "  # Compiling Linux Golang App ...")
-	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_LINUX} -o releases/${RELEASE}/${APP_NAME}_linux'
+	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_LINUX} -o releases/${RELEASE}/${APP_NAME}-linux-amd64'
 
 ## build_osx: build binary for OSX
 .PHONY: build_osx
 build_osx:
 	$(call blue, "  # Compiling OSX Golang App ...")
-	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_OSX} -o releases/${RELEASE}/${APP_NAME}_osx'
+	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_OSX} -o releases/${RELEASE}/${APP_NAME}-darwin-amd64'
 
 ## build_win: build binary for Windows
 .PHONY: build_win
 build_win:
 	$(call blue, "  # Compiling Windows Golang App ...")
-	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_WIN} -o releases/${RELEASE}/${APP_NAME}.exe'
+	@${DOCKER_GO_BUILD} sh -c 'go get && ${GO_BUILD_WIN} -o releases/${RELEASE}/${APP_NAME}-windows-amd64.exe'
+
+## tag_push_release: release to github
+.PHONY: tag_push_release
+tag_push_release:
+	$(call blue, "  # Tagging Release ...")
+	git tag "v${RELEASE}"
+	hub release create \
+	-a releases/${RELEASE}/${APP_NAME}-linux-amd64 \
+	-a releases/${RELEASE}/${APP_NAME}-darwin-amd64 \
+	-a releases/${RELEASE}/${APP_NAME}-windows-amd64.exe \
+	-m "v${RELEASE} v${RELEASE}
+
 
 ## test: run test suitde for application
 .PHONY: test
