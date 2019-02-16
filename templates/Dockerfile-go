@@ -1,18 +1,55 @@
 # Multistage Build
 
-### CREATE DOCKERMASTER USER
-FROM alpine:3.6 AS alpine
-RUN adduser -D -u 10001 dockmaster
+# --  Set ARGS
+ARG ORG_NAME=davyj0nes
+ARG REPO_NAME=sample
+ARG MAINTAINER_NAME=DavyJ0nes
+ARG APP_NAME=app
+ARG MAIN_PATH=cmd/main.go
 
-## MAIN IMAGE
-FROM scratch
-LABEL Name=app_name
-LABEL Author=davyj0nes
+# -- Builder Image
+FROM golang:1.12rc1-stretch As Builder
 
-COPY --from=alpine /etc/passwd /etc/passwd
+ARG ORG_NAME
+ARG REPO_NAME
+ARG MAINTAINER_NAME
+ARG APP_NAME
+ARG MAIN_PATH
 
-ADD app /
+ENV GO111MODULE=on
+
+WORKDIR /go/src/github.com/${ORG_NAME}/${REPO_NAME}
+
+# Set up dependencies
+COPY ./go.mod go.mod
+COPY ./go.sum go.sum
+RUN go mod vendor
+
+# Copy rest of the package code
+COPY . .
+
+# Build the statically linked binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo --installsuffix netgo -o $APP_NAME $MAIN_PATH
+
+# -- Main Image
+FROM alpine:3.9
+
+ARG ORG_NAME
+ARG REPO_NAME
+ARG MAINTAINER_NAME
+ARG APP_NAME
+ARG MAIN_PATH
+
+LABEL MAINTAINER=${MAINTAINER_NAME}
+LABEL OWNER=${MAINTAINER_NAME}
+
+# Copy binary from builder image
+COPY --from=Builder /go/src/github.com/${ORG_NAME}/${REPO_NAME}/${APP_NAME} /bin/app
+RUN chmod +x /bin/app
+
+# Ensure not runnning as root user
+RUN adduser -D -s /bin/sh dockmaster
 USER dockmaster
 
 EXPOSE 8080
-CMD ["./app"]
+CMD ["app"]
