@@ -7,3 +7,4 @@ releases/
 file_templates
 __pycache__*
 *ropeproject*
+vendor/*

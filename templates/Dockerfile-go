@@ -1,55 +1,27 @@
-# Multistage Build
-
-# --  Set ARGS
-ARG ORG_NAME=davyj0nes
-ARG REPO_NAME=sample
-ARG MAINTAINER_NAME=DavyJ0nes
-ARG APP_NAME=app
-ARG MAIN_PATH=cmd/main.go
-
 # -- Builder Image
-FROM golang:1.12rc1-stretch As Builder
+FROM golang:1.13-alpine3.10 As Builder
 
-ARG ORG_NAME
-ARG REPO_NAME
-ARG MAINTAINER_NAME
-ARG APP_NAME
-ARG MAIN_PATH
+WORKDIR /go/src/github.com/davyj0nes/project
+COPY . /go/src/github.com/davyj0nes/project
 
-ENV GO111MODULE=on
-
-WORKDIR /go/src/github.com/${ORG_NAME}/${REPO_NAME}
-
-# Set up dependencies
-COPY ./go.mod go.mod
-COPY ./go.sum go.sum
-RUN go mod vendor
-
-# Copy rest of the package code
-COPY . .
-
-# Build the statically linked binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo --installsuffix netgo -o $APP_NAME $MAIN_PATH
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo --installsuffix netgo -o project main.go
 
 # -- Main Image
-FROM alpine:3.9
+FROM alpine:3.10
 
-ARG ORG_NAME
-ARG REPO_NAME
-ARG MAINTAINER_NAME
-ARG APP_NAME
-ARG MAIN_PATH
+LABEL MAINTAINER=DavyJ0nes
+LABEL OWNER=DavyJ0nes
 
-LABEL MAINTAINER=${MAINTAINER_NAME}
-LABEL OWNER=${MAINTAINER_NAME}
+# add root CA TLS certs
+RUN apk --no-cache add ca-certificates
+
+RUN adduser -D -s /bin/sh app
 
 # Copy binary from builder image
-COPY --from=Builder /go/src/github.com/${ORG_NAME}/${REPO_NAME}/${APP_NAME} /bin/app
-RUN chmod +x /bin/app
+COPY --from=Builder /go/src/github.com/iZettle/davyj0nes/project /bin/project
+RUN chmod a+x /bin/project
 
 # Ensure not runnning as root user
-RUN adduser -D -s /bin/sh dockmaster
-USER dockmaster
+USER app
 
-EXPOSE 8080
-CMD ["app"]
+CMD ["project"]
